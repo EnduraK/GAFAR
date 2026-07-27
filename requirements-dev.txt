@@ -1,0 +1,4 @@
+-r requirements.txt
+pytest>=8.0
+scikit-image>=0.22      # bundled real-face image for the integration test
+huggingface_hub>=0.23   # pulls the landmark model in tests/setup

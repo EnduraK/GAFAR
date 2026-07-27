@@ -1,0 +1,14 @@
+# Core runtime
+numpy>=1.24
+opencv-python>=4.8          # webcam capture + image IO (headless variant is fine)
+mediapipe>=0.10             # face landmarks (Tasks FaceLandmarker API)
+
+# The landmark model file (models/face_landmarker.task, ~3.7 MB) is included in
+# this bundle. To fetch it yourself:
+#   from huggingface_hub import hf_hub_download
+#   hf_hub_download("trysem/facelandmarker", "face_landmarker.task")
+
+# --- Optional: real embedding backend (commercially clean, Boost licence) ---
+# dlib>=19.24
+#   plus model files: shape_predictor_5_face_landmarks.dat,
+#                     dlib_face_recognition_resnet_model_v1.dat  (from dlib.net)
