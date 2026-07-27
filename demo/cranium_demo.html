@@ -6,82 +6,123 @@
 <title>CRANIUM — upper-face authorisation demo</title>
 <style>
   :root{
-    --bg:#0b0f14; --panel:#131a22; --panel2:#1a232e; --line:#263241;
-    --ink:#e7eef6; --muted:#8da0b3; --muted2:#6f8296;
-    --accent:#00c2a8; --accent2:#3aa0ff; --ok:#22c55e; --bad:#ef4444; --warn:#f59e0b;
+    --bg:#0a0e13; --bg2:#0e141b; --panel:#131b24; --panel2:#1a2530; --line:#243040;
+    --ink:#eaf1f8; --muted:#93a4b7; --muted2:#6c7f93;
+    --accent:#00c6a9; --accent2:#3aa0ff; --ok:#22c55e; --bad:#f0556b; --warn:#f5b23a;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
   }
   *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  header{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;
-    align-items:center;gap:14px;flex-wrap:wrap}
-  .logo{font-weight:800;letter-spacing:2px;font-size:20px}
+  html,body{margin:0}
+  body{background:radial-gradient(1200px 600px at 80% -10%,#132132 0,var(--bg) 55%);color:var(--ink);
+    font:15px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  a{color:var(--accent2);text-decoration:none} a:hover{text-decoration:underline}
+  header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:11px}
+  .mark{width:30px;height:30px;border-radius:8px;background:conic-gradient(from 210deg,#00c6a9,#3aa0ff,#00c6a9);
+    display:grid;place-items:center;color:#04211d;font-weight:900;box-shadow:var(--shadow)}
+  .logo{font-weight:800;letter-spacing:2.5px;font-size:19px}
   .logo b{color:var(--accent)}
   .tagline{color:var(--muted);font-size:13px}
-  .banner{margin-left:auto;background:#20170a;border:1px solid #6b4b16;color:#f4c66a;
-    padding:6px 10px;border-radius:8px;font-size:12px;max-width:520px}
-  main{display:grid;grid-template-columns:minmax(360px,1fr) minmax(320px,420px);
-    gap:18px;padding:18px;max-width:1200px;margin:0 auto}
-  @media(max-width:880px){main{grid-template-columns:1fr}}
-  .card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:16px}
-  .card h2{margin:0 0 12px;font-size:14px;text-transform:uppercase;letter-spacing:1px;color:var(--muted)}
-  .stagewrap{position:relative;width:100%;aspect-ratio:4/3;background:#000;border-radius:12px;overflow:hidden}
+  .banner{margin-left:auto;background:#1b1608;border:1px solid #5c4416;color:#f2c974;
+    padding:7px 11px;border-radius:9px;font-size:12px;max-width:540px;line-height:1.45}
+  main{display:grid;grid-template-columns:minmax(340px,1.15fr) minmax(320px,.85fr);gap:16px;
+    padding:16px;max-width:1180px;margin:0 auto}
+  @media(max-width:900px){main{grid-template-columns:1fr}}
+  .card{background:linear-gradient(180deg,var(--panel),var(--bg2));border:1px solid var(--line);
+    border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+  .card h2{margin:0 0 12px;font-size:12.5px;text-transform:uppercase;letter-spacing:1.4px;color:var(--muted);
+    display:flex;align-items:center;gap:8px}
+  /* stepper */
+  .steps{display:flex;gap:8px;margin:0 0 12px}
+  .step{flex:1;display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);
+    border-radius:10px;background:var(--panel2);color:var(--muted);font-size:12.5px}
+  .step .n{width:20px;height:20px;border-radius:50%;background:#0c141c;border:1px solid var(--line);
+    display:grid;place-items:center;font-weight:700;font-size:11px;color:var(--muted)}
+  .step.active{border-color:var(--accent);color:var(--ink);box-shadow:inset 0 0 0 1px var(--accent)}
+  .step.active .n{background:var(--accent);color:#04211d;border-color:var(--accent)}
+  .step.done .n{background:var(--ok);color:#052; border-color:var(--ok)}
+  .step.done{color:var(--ink)}
+  /* stage */
+  .stagewrap{position:relative;width:100%;aspect-ratio:4/3;background:#05080b;border-radius:13px;overflow:hidden;
+    border:1px solid var(--line)}
   video,canvas.overlay{position:absolute;inset:0;width:100%;height:100%}
   video{object-fit:cover;transform:scaleX(-1)}
-  canvas.overlay{transform:scaleX(-1)}
-  .status{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;font-size:12.5px}
+  canvas.overlay{transform:scaleX(-1);pointer-events:none}
+  .stageMsg{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:20px;
+    color:var(--muted);font-size:13.5px;background:rgba(5,8,11,.72);backdrop-filter:blur(2px)}
+  .spinner{width:26px;height:26px;border-radius:50%;border:3px solid #2a3a4c;border-top-color:var(--accent);
+    animation:spin 1s linear infinite;margin:0 auto 10px}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  .status{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px;font-size:12px}
   .pill{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;color:var(--muted)}
-  .pill.on{color:var(--ink);border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
-  .pill.bad{color:#fff;border-color:var(--bad);background:#2a1414}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0}
-  label.fld{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
-  select,button,input[type=range]{font:inherit}
-  select{background:var(--panel2);color:var(--ink);border:1px solid var(--line);
-    border-radius:8px;padding:8px 10px}
-  button{background:var(--accent);color:#05231f;border:0;border-radius:10px;padding:10px 14px;
-    font-weight:700;cursor:pointer}
+  .pill.on{color:var(--ink);border-color:var(--accent);box-shadow:inset 0 0 0 1px rgba(0,198,169,.5)}
+  .pill.bad{color:#fff;border-color:var(--bad);background:#2a1418}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0}
+  label.fld{font-size:11.5px;color:var(--muted);display:flex;flex-direction:column;gap:5px}
+  select{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+  button{background:var(--accent);color:#04211d;border:0;border-radius:10px;padding:10px 15px;font-weight:750;
+    cursor:pointer;transition:transform .05s ease, filter .15s ease}
+  button:hover:not(:disabled){filter:brightness(1.07)} button:active:not(:disabled){transform:translateY(1px)}
   button.ghost{background:var(--panel2);color:var(--ink);border:1px solid var(--line);font-weight:600}
-  button:disabled{opacity:.45;cursor:not-allowed}
-  .seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
-  .seg button{background:var(--panel2);color:var(--muted);border-radius:0;font-weight:600}
+  button.small{padding:6px 10px;font-size:12px;font-weight:600}
+  button:disabled{opacity:.4;cursor:not-allowed}
+  .seg{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:10px}
+  .seg button{background:var(--panel2);color:var(--muted);border-radius:0;font-weight:650;flex:1}
   .seg button.active{background:var(--accent2);color:#04213f}
-  .req{background:var(--panel2);border:1px dashed var(--line);border-radius:10px;padding:12px;margin-top:6px}
-  .req .big{font-size:17px;font-weight:700}
-  .req .sub{color:var(--muted);font-size:12.5px}
+  .req{background:var(--panel2);border:1px dashed var(--line);border-radius:11px;padding:12px}
+  .req .big{font-size:17px;font-weight:750} .req .sub{color:var(--muted);font-size:12.5px;margin-top:2px}
+  .scoreline{display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-top:12px}
+  .meter{height:9px;background:#0a1016;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin-top:5px;position:relative}
+  .meter>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent2),var(--accent));transition:width .2s}
+  .meter>.mark{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--warn)}
   .decision{border-radius:12px;padding:14px;margin-top:12px;border:1px solid var(--line);background:var(--panel2)}
-  .decision.ok{border-color:var(--ok);background:#0f1f16}
-  .decision.bad{border-color:var(--bad);background:#1f1313}
-  .decision .verdict{font-size:18px;font-weight:800;letter-spacing:.5px}
-  .decision ul{margin:8px 0 0;padding-left:18px;color:var(--muted)}
-  .meter{height:8px;background:#0c1218;border-radius:999px;overflow:hidden;margin-top:8px}
-  .meter > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent))}
-  .audit{max-height:230px;overflow:auto;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace}
+  .decision.ok{border-color:var(--ok);background:linear-gradient(180deg,#0f2119,#0c1a14)}
+  .decision.bad{border-color:var(--bad);background:linear-gradient(180deg,#221316,#1a0f12)}
+  .decision .verdict{font-size:18px;font-weight:850;letter-spacing:.4px}
+  .decision.ok .verdict{color:#7ff0be} .decision.bad .verdict{color:#ff9aa8}
+  .decision ul{margin:8px 0 0;padding-left:18px;color:var(--muted)} .decision li{margin:2px 0}
+  .audithead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .chip{display:inline-block;background:#0a1016;border:1px solid var(--line);border-radius:6px;padding:1px 7px;
+    color:var(--muted);font-size:11px}
+  .chip.ok{color:#8ef0c2;border-color:#1f5140} .chip.bad{color:#ff9aa8;border-color:#5a2530}
+  .audit{max-height:240px;overflow:auto;font:12px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;margin-top:10px}
   .audit .rec{border-bottom:1px solid var(--line);padding:8px 0}
   .audit .h{color:var(--muted2);word-break:break-all}
   .audit .v.ok{color:var(--ok)} .audit .v.bad{color:var(--bad)}
-  .chip{display:inline-block;background:#0c1218;border:1px solid var(--line);border-radius:6px;
-    padding:1px 6px;color:var(--muted);font-size:11px}
-  .foot{color:var(--muted2);font-size:11.5px;padding:6px 20px 26px;max-width:1200px;margin:0 auto}
-  code{background:#0c1218;border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:#cfe4ff}
-  a{color:var(--accent2)}
+  .foot{color:var(--muted2);font-size:11.5px;padding:8px 22px 28px;max-width:1180px;margin:0 auto}
+  code{background:#0a1016;border:1px solid var(--line);border-radius:5px;padding:1px 6px;color:#cfe4ff;font-size:12px}
 </style>
 </head>
 <body>
 <header>
-  <div class="logo"><b>CRANIUM</b></div>
-  <div class="tagline">upper-face (periocular) verification &amp; authorisation — browser prototype</div>
-  <div class="banner" id="banner">Prototype. The face descriptor here is a general <b>full-face</b> model
-    (face-api.js) used as a stand-in; the periocular-specific model and certified liveness are the roadmap.
-    Nothing leaves your device — no images or vectors are uploaded or stored after the page closes.</div>
+  <div class="brand">
+    <div class="mark">C</div>
+    <div>
+      <div class="logo"><b>CRANIUM</b></div>
+      <div class="tagline">upper-face (periocular) verification &amp; authorisation — prototype</div>
+    </div>
+  </div>
+  <div class="banner" id="banner">The face descriptor here is a general <b>full-face</b> model (face-api.js) used as a
+    stand-in; the periocular-specific model and certified liveness are the roadmap. Everything runs on your device —
+    no images or vectors leave the browser.</div>
 </header>
 
 <main>
-  <!-- LEFT: capture -->
+  <!-- LEFT -->
   <section class="card">
     <h2>Capture</h2>
+    <div class="steps">
+      <div class="step active" id="s1"><span class="n">1</span> Enable camera</div>
+      <div class="step" id="s2"><span class="n">2</span> Enrol face</div>
+      <div class="step" id="s3"><span class="n">3</span> Authorise</div>
+    </div>
     <div class="stagewrap">
       <video id="video" autoplay muted playsinline></video>
       <canvas id="overlay" class="overlay"></canvas>
+      <div class="stageMsg" id="stageMsg">Click <b style="margin:0 5px">Enable camera</b> to begin.
+        <div style="font-size:12px;color:var(--muted2);margin-top:8px">Runs locally over https:// or localhost.</div>
+      </div>
     </div>
     <div class="status" id="status">
       <span class="pill" id="pFace">no face</span>
@@ -90,31 +131,28 @@
       <span class="pill" id="pEnroll">not enrolled</span>
     </div>
     <div class="row">
-      <button id="btnStart" class="ghost">Enable camera</button>
-      <button id="btnEnroll" disabled>Enrol this face</button>
-      <button id="btnClear" class="ghost" disabled>Clear enrolment</button>
-      <label class="fld" style="margin-left:auto">
-        <span>Mask illustration</span>
-        <select id="maskToggle"><option value="off">off</option><option value="on">on (draw mask)</option></select>
+      <button id="btnStart">Enable camera</button>
+      <button id="btnEnroll" class="ghost" disabled>Enrol this face</button>
+      <button id="btnClear" class="ghost small" disabled>Clear</button>
+      <label class="fld" style="margin-left:auto">Mask illustration
+        <select id="maskToggle"><option value="off">off</option><option value="on">on</option></select>
       </label>
     </div>
-    <p class="tagline" style="margin:2px 2px 0">The yellow box is the region CRANIUM matches on. It stays fully
-      visible when the lower face is covered — that is the entire point.</p>
+    <p class="tagline" style="margin:2px 2px 0">The yellow box is the region CRANIUM matches on — it stays fully
+      visible when the lower face is covered. That is the entire idea.</p>
   </section>
 
-  <!-- RIGHT: authorisation -->
+  <!-- RIGHT -->
   <section class="card">
     <h2>Authorisation event</h2>
     <div class="seg" id="skins">
-      <button data-skin="medication" class="active">Medication cabinet</button>
-      <button data-skin="banking">High-value transfer</button>
+      <button data-skin="medication" class="active">💊 Medication cabinet</button>
+      <button data-skin="banking">🏦 High-value transfer</button>
     </div>
-
-    <div class="req" id="req">
+    <div class="req">
       <div class="big" id="reqAction">Release controlled drug</div>
       <div class="sub" id="reqResource">Morphine sulfate 10 mg — CD cabinet 3</div>
     </div>
-
     <div class="row">
       <label class="fld">Risk level
         <select id="risk">
@@ -124,298 +162,257 @@
           <option value="critical">critical</option>
         </select>
       </label>
-      <label class="fld" style="flex:1">Match threshold (cosine): <span id="thrVal">0.86</span>
-        <input id="thr" type="range" min="0.60" max="0.98" step="0.01" value="0.86">
+      <label class="fld" style="flex:1;min-width:150px">Match threshold (cosine): <span id="thrVal">0.86</span>
+        <input id="thr" type="range" min="0.60" max="0.98" step="0.01" value="0.86" style="width:100%">
       </label>
     </div>
-    <div class="row" style="margin-top:0">
-      <span class="pill" id="pPolicy">policy —</span>
-      <button id="btnAuth" disabled>Request authorisation</button>
-    </div>
+    <span class="pill" id="pPolicy">policy —</span>
 
+    <div class="scoreline"><span>live similarity to enrolled face</span><span id="liveScore">—</span></div>
+    <div class="meter"><i id="liveBar"></i><span class="mark" id="thrMark" style="left:76%"></span></div>
+
+    <div class="row" style="margin-top:12px">
+      <button id="btnAuth" disabled>Request authorisation</button>
+      <span class="tagline" id="authHint">Enrol a face first.</span>
+    </div>
     <div class="decision" id="decision" style="display:none"></div>
   </section>
 
-  <!-- audit -->
+  <!-- AUDIT -->
   <section class="card" style="grid-column:1/-1">
-    <h2>Tamper-evident audit log <span class="chip" id="chainState">chain: empty</span></h2>
+    <div class="audithead">
+      <h2 style="margin:0">Tamper-evident audit log</h2>
+      <span class="chip" id="chainState">chain: empty</span>
+      <span style="margin-left:auto"></span>
+      <button class="ghost small" id="btnDownload" disabled>Download JSON</button>
+      <button class="ghost small" id="btnResetAudit" disabled>Reset</button>
+    </div>
     <div class="audit" id="audit"><div class="tagline">No authorisation events yet.</div></div>
   </section>
 </main>
 
 <p class="foot">
-  Runs entirely in your browser. Models load once from a public CDN
-  (<code>@vladmandic/face-api</code>). CRANIUM is <b>1:1 verification</b> only — a probe is compared against the
-  single enrolled template, never searched against a database — the design choice that keeps it in the EU AI Act's
-  verification carve-out. Best in Chrome/Edge/Safari over <code>https://</code> or <code>localhost</code>
-  (camera access requires a secure context).
+  Runs entirely in your browser; models load once from a public CDN (<code>@vladmandic/face-api</code>).
+  CRANIUM is <b>1:1 verification</b> — a probe is compared against the single enrolled template, never searched
+  against a database — the choice that keeps it in the EU AI Act's verification carve-out. Camera access needs a
+  secure context: serve over <code>localhost</code> (<code>python3 -m http.server</code>) or <code>https://</code>.
 </p>
 
 <script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/dist/face-api.js"></script>
 <script>
 "use strict";
-const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/";
+const MODEL_URL="https://cdn.jsdelivr.net/npm/@vladmandic/face-api/model/";
 
-// ---- policy layer (mirrors cranium/config.py) -----------------------------
-const RISK = {
-  low:      {threshold:0.80, liveness:false},
-  standard: {threshold:0.86, liveness:true},
-  high:     {threshold:0.90, liveness:true},
-  critical: {threshold:0.93, liveness:true},
+const RISK={
+  low:{threshold:0.80,liveness:false}, standard:{threshold:0.86,liveness:true},
+  high:{threshold:0.90,liveness:true}, critical:{threshold:0.93,liveness:true},
 };
-const SKINS = {
-  medication:{action:"Release controlled drug", resource:"Morphine sulfate 10 mg — CD cabinet 3",
-              actionId:"release_controlled_drug"},
-  banking:   {action:"Approve high-value transfer", resource:"£25,000 → acct ****1234",
-              actionId:"approve_transfer"},
+const SKINS={
+  medication:{action:"Release controlled drug",resource:"Morphine sulfate 10 mg — CD cabinet 3",actionId:"release_controlled_drug"},
+  banking:{action:"Approve high-value transfer",resource:"£25,000 → acct ****1234",actionId:"approve_transfer"},
 };
 
-// ---- state ----------------------------------------------------------------
-let template = null;          // enrolled descriptor (Float32Array, normalised)
-let running = false;
-let lastLandmarks = null;
-let lastEAR = null;
-let skin = "medication";
-const audit = [];             // {prev, hash, decision}
+let template=null, running=false, lastLandmarks=null, lastEAR=null, lastDescriptor=null, skin="medication";
+const audit=[];
 
-// ---- helpers --------------------------------------------------------------
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
 function l2norm(v){let s=0;for(const x of v)s+=x*x;s=Math.sqrt(s)||1;return v.map(x=>x/s);}
-function cosine(a,b){let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s;}   // inputs pre-normalised
-function ear(pts){ // 6 pts p0..p5 as {x,y}
-  const d=(p,q)=>Math.hypot(p.x-q.x,p.y-q.y);
-  const horiz=d(pts[0],pts[3])||1e-6;
-  return (d(pts[1],pts[5])+d(pts[2],pts[4]))/(2*horiz);
-}
-async function sha256hex(str){
-  const buf=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(str));
-  return [...new Uint8Array(buf)].map(b=>b.toString(16).padStart(2,"0")).join("");
-}
+function cosine(a,b){let s=0;for(let i=0;i<a.length;i++)s+=a[i]*b[i];return s;}
+function ear(p){const d=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);const h=d(p[0],p[3])||1e-6;return (d(p[1],p[5])+d(p[2],p[4]))/(2*h);}
+async function sha256hex(s){const b=await crypto.subtle.digest("SHA-256",new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,"0")).join("");}
 
-// ---- blink liveness challenge (mirrors cranium/liveness.py) ---------------
-const EAR_CLOSED=0.20, EAR_OPEN=0.25;
-function makeBlinkChallenge(windowMs=4000){
-  let closed=false, blinks=0, t0=null;
-  return {
-    update(e,t){
-      if(t0===null)t0=t;
-      if(!closed && e<EAR_CLOSED)closed=true;
-      else if(closed && e>EAR_OPEN){closed=false;blinks++;}
-      if(blinks>=1)return {done:true,passed:true,reason:"blink detected"};
-      if(t-t0>windowMs)return {done:true,passed:false,reason:"timeout: no blink"};
-      return {done:false,passed:false,reason:"waiting for blink"};
-    }
-  };
-}
+const EAR_CLOSED=0.20,EAR_OPEN=0.25;
+function makeBlink(win=4000){let closed=false,blinks=0,t0=null;return{update(e,t){if(t0===null)t0=t;
+  if(!closed&&e<EAR_CLOSED)closed=true;else if(closed&&e>EAR_OPEN){closed=false;blinks++;}
+  if(blinks>=1)return{done:true,passed:true};if(t-t0>win)return{done:true,passed:false};return{done:false};}};}
 
-// ---- camera + detection loop ---------------------------------------------
-const video=$("video"), overlay=$("overlay"), octx=overlay.getContext("2d");
-let detOpts;
+const video=$("video"),overlay=$("overlay"),octx=overlay.getContext("2d");
+let detOpts, modelsReady=false;
+
+function setStep(){
+  const cam=running, enr=!!template;
+  $("s1").className="step"+(cam?" done":" active");
+  $("s2").className="step"+(enr?" done":(cam?" active":""));
+  $("s3").className="step"+(enr?" active":"");
+}
+function stage(msg){const el=$("stageMsg"); if(msg===null){el.style.display="none";} else {el.style.display="grid";el.innerHTML=msg;}}
 
 async function loadModels(){
-  $("banner").innerHTML="Loading models…";
+  if(modelsReady)return;
+  if(typeof faceapi==="undefined")throw new Error("face-api.js failed to load (network/adblock?)");
+  stage('<div class="spinner"></div>Loading models…');
   await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
   await faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL);
   await faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL);
   detOpts=new faceapi.TinyFaceDetectorOptions({inputSize:320,scoreThreshold:0.4});
-  $("banner").innerHTML="Prototype. Descriptor is a general <b>full-face</b> model (face-api.js) as a stand-in; "+
-    "the periocular model &amp; certified liveness are the roadmap. Nothing leaves your device.";
+  modelsReady=true;
 }
-
 async function startCamera(){
-  try{
-    const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:640,height:480}});
-    video.srcObject=stream;
-    await video.play();
-    overlay.width=video.videoWidth||640; overlay.height=video.videoHeight||480;
-    running=true; $("btnStart").textContent="Camera on"; $("btnStart").disabled=true;
-    loop();
-  }catch(e){
-    $("pFace").className="pill bad"; $("pFace").textContent="camera blocked";
-    alert("Camera access failed: "+e.message+"\nUse https:// or localhost, and allow the camera.");
-  }
+  const stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:"user",width:640,height:480}});
+  video.srcObject=stream; await video.play();
+  overlay.width=video.videoWidth||640; overlay.height=video.videoHeight||480;
+  running=true; stage(null); setStep();
+  $("btnStart").textContent="Camera on"; $("btnStart").disabled=true;
+  loop();
 }
 
 function periocularBox(lm){
-  // upper face: brows(17-26), eyes(36-47), nose bridge(27-30)
-  const idx=[]; for(let i=17;i<=30;i++)idx.push(i); for(let i=36;i<=47;i++)idx.push(i);
-  const pos=lm.positions;
-  let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;
-  for(const i of idx){const p=pos[i];x1=Math.min(x1,p.x);y1=Math.min(y1,p.y);x2=Math.max(x2,p.x);y2=Math.max(y2,p.y);}
-  const bw=x2-x1,bh=y2-y1;
-  x1-=bw*0.15;x2+=bw*0.15;y1-=bh*0.55;y2+=bh*0.15;   // extend up toward forehead
-  return {x1,y1,x2,y2};
+  const idx=[];for(let i=17;i<=30;i++)idx.push(i);for(let i=36;i<=47;i++)idx.push(i);
+  const p=lm.positions;let x1=1e9,y1=1e9,x2=-1e9,y2=-1e9;
+  for(const i of idx){const q=p[i];x1=Math.min(x1,q.x);y1=Math.min(y1,q.y);x2=Math.max(x2,q.x);y2=Math.max(y2,q.y);}
+  const bw=x2-x1,bh=y2-y1;return{x1:x1-bw*.15,y1:y1-bh*.55,x2:x2+bw*.15,y2:y2+bh*.15};
+}
+function updateLiveScore(){
+  const el=$("liveScore"),bar=$("liveBar");
+  if(template&&lastDescriptor){const s=cosine(template,lastDescriptor);
+    el.textContent=s.toFixed(3); bar.style.width=(clamp(s,0,1)*100).toFixed(0)+"%";
+    bar.style.background=s>=(+$("thr").value)?"linear-gradient(90deg,#22c55e,#00c6a9)":"linear-gradient(90deg,#3aa0ff,#00c6a9)";
+  } else {el.textContent="—"; bar.style.width="0";}
 }
 
 async function loop(){
   if(!running)return;
-  const res=await faceapi.detectSingleFace(video,detOpts).withFaceLandmarks().withFaceDescriptor();
+  let res=null;
+  try{res=await faceapi.detectSingleFace(video,detOpts).withFaceLandmarks().withFaceDescriptor();}catch(e){}
   octx.clearRect(0,0,overlay.width,overlay.height);
   if(res){
-    const lm=res.landmarks; lastLandmarks=lm; window._lastDescriptor=l2norm(Array.from(res.descriptor));
-    const box=periocularBox(lm);
-    // periocular ROI
-    octx.strokeStyle="#ffd60a";octx.lineWidth=3;
-    octx.strokeRect(box.x1,box.y1,box.x2-box.x1,box.y2-box.y1);
-    // eye points
-    octx.fillStyle="#00e0c6";
-    for(const p of lm.getLeftEye().concat(lm.getRightEye()))
-      {octx.beginPath();octx.arc(p.x,p.y,2.5,0,7);octx.fill();}
-    // EAR
+    const lm=res.landmarks; lastLandmarks=lm; lastDescriptor=l2norm(Array.from(res.descriptor));
+    const b=periocularBox(lm);
+    octx.strokeStyle="#ffd60a";octx.lineWidth=3;octx.strokeRect(b.x1,b.y1,b.x2-b.x1,b.y2-b.y1);
+    octx.fillStyle="#00e6cc";
+    for(const q of lm.getLeftEye().concat(lm.getRightEye())){octx.beginPath();octx.arc(q.x,q.y,2.4,0,7);octx.fill();}
     const e=(ear(lm.getLeftEye())+ear(lm.getRightEye()))/2; lastEAR=e;
-    $("pFace").className="pill on"; $("pFace").textContent="face detected";
-    $("pRoi").className="pill on"; $("pRoi").textContent="periocular locked";
-    $("pEar").className="pill"+(e<EAR_CLOSED?" on":""); $("pEar").textContent="EAR "+e.toFixed(2);
-    // optional mask illustration
+    $("pFace").className="pill on";$("pFace").textContent="face detected";
+    $("pRoi").className="pill on";$("pRoi").textContent="periocular locked";
+    $("pEar").className="pill"+(e<EAR_CLOSED?" on":"");$("pEar").textContent="EAR "+e.toFixed(2);
     if($("maskToggle").value==="on"){
-      const jaw=lm.getJawOutline(), nose=lm.getNose();
-      octx.fillStyle="rgba(120,140,160,.92)";
-      octx.beginPath();
-      const top=nose[0].y+ (nose[nose.length-1].y-nose[0].y)*0.4;
-      octx.moveTo(jaw[0].x, top);
-      for(const p of jaw)octx.lineTo(p.x,p.y);
-      octx.lineTo(jaw[jaw.length-1].x, top);
-      octx.closePath();octx.fill();
-      octx.strokeStyle="#4a5a6a";octx.stroke();
+      const jaw=lm.getJawOutline(),nose=lm.getNose();
+      const top=nose[0].y+(nose[nose.length-1].y-nose[0].y)*0.45;
+      octx.fillStyle="rgba(120,140,160,.92)";octx.beginPath();octx.moveTo(jaw[0].x,top);
+      for(const q of jaw)octx.lineTo(q.x,q.y);octx.lineTo(jaw[jaw.length-1].x,top);octx.closePath();octx.fill();
+      octx.strokeStyle="#48586a";octx.lineWidth=1.5;octx.stroke();
     }
   }else{
-    lastLandmarks=null; window._lastDescriptor=null;
-    $("pFace").className="pill bad"; $("pFace").textContent="no face";
-    $("pRoi").className="pill"; $("pRoi").textContent="periocular —";
-    $("pEar").className="pill"; $("pEar").textContent="EAR —";
+    lastLandmarks=null;lastDescriptor=null;
+    $("pFace").className="pill bad";$("pFace").textContent="no face";
+    $("pRoi").className="pill";$("pRoi").textContent="periocular —";
+    $("pEar").className="pill";$("pEar").textContent="EAR —";
   }
   $("btnEnroll").disabled=!res;
   $("btnAuth").disabled=!(res&&template);
+  updateLiveScore();
   requestAnimationFrame(loop);
 }
 
-// ---- enrolment ------------------------------------------------------------
+$("btnStart").onclick=async()=>{
+  $("btnStart").disabled=true;$("btnStart").textContent="loading…";
+  try{await loadModels();await startCamera();}
+  catch(e){running=false;$("btnStart").disabled=false;$("btnStart").textContent="Enable camera";
+    stage('⚠️ '+e.message+'<div style="font-size:12px;margin-top:8px;color:var(--muted2)">'+
+      'Use https:// or localhost and allow the camera, then retry.</div>');}
+};
 $("btnEnroll").onclick=()=>{
-  if(!window._lastDescriptor)return;
-  template=window._lastDescriptor.slice();
-  $("pEnroll").className="pill on"; $("pEnroll").textContent="enrolled ✓";
-  $("btnClear").disabled=false;
-  $("btnAuth").disabled=false;
+  if(!lastDescriptor)return;
+  template=lastDescriptor.slice();
+  $("pEnroll").className="pill on";$("pEnroll").textContent="enrolled ✓";
+  $("btnClear").disabled=false;$("btnAuth").disabled=false;$("authHint").textContent="Ready.";
+  setStep();
 };
 $("btnClear").onclick=()=>{
-  template=null; $("pEnroll").className="pill";$("pEnroll").textContent="not enrolled";
-  $("btnClear").disabled=true;$("btnAuth").disabled=true;
+  template=null;$("pEnroll").className="pill";$("pEnroll").textContent="not enrolled";
+  $("btnClear").disabled=true;$("btnAuth").disabled=true;$("authHint").textContent="Enrol a face first.";
+  $("decision").style.display="none";setStep();updateLiveScore();
 };
 
-// ---- UI wiring ------------------------------------------------------------
 document.querySelectorAll("#skins button").forEach(b=>b.onclick=()=>{
   document.querySelectorAll("#skins button").forEach(x=>x.classList.remove("active"));
-  b.classList.add("active"); skin=b.dataset.skin;
-  $("reqAction").textContent=SKINS[skin].action; $("reqResource").textContent=SKINS[skin].resource;
+  b.classList.add("active");skin=b.dataset.skin;
+  $("reqAction").textContent=SKINS[skin].action;$("reqResource").textContent=SKINS[skin].resource;
 });
 function refreshPolicy(){
-  const r=$("risk").value, p=RISK[r];
-  $("thr").value=p.threshold; $("thrVal").textContent=p.threshold.toFixed(2);
-  $("pPolicy").textContent="policy: ≥"+p.threshold.toFixed(2)+(p.liveness?" + liveness":" • no liveness");
+  const p=RISK[$("risk").value];$("thr").value=p.threshold;$("thrVal").textContent=p.threshold.toFixed(2);
+  paintPolicy();
+}
+function paintPolicy(){
+  const liveness=RISK[$("risk").value].liveness,thr=+$("thr").value;
+  $("thrVal").textContent=thr.toFixed(2);
+  $("pPolicy").textContent="policy: ≥"+thr.toFixed(2)+(liveness?" + liveness":" • no liveness");
+  $("thrMark").style.left=(clamp(thr,0,1)*100).toFixed(0)+"%";
+  updateLiveScore();
 }
 $("risk").onchange=refreshPolicy;
-$("thr").oninput=()=>{$("thrVal").textContent=(+$("thr").value).toFixed(2);
-  $("pPolicy").textContent="policy: ≥"+(+$("thr").value).toFixed(2)+(RISK[$("risk").value].liveness?" + liveness":" • no liveness");};
+$("thr").oninput=paintPolicy;
 
-// ---- the authorisation event ---------------------------------------------
 $("btnAuth").onclick=async()=>{
-  if(!template){return;}
-  const r=$("risk").value, policy=RISK[r], threshold=+$("thr").value;
-  const dec=$("decision"); dec.style.display="block"; dec.className="decision";
-  const reasons=[]; let approved=true;
-
-  // 1) liveness challenge if required
+  if(!template)return;
+  const r=$("risk").value,policy=RISK[r],threshold=+$("thr").value;
+  const dec=$("decision");dec.style.display="block";dec.className="decision";
+  const reasons=[];let approved=true;
   let livePassed=!policy.liveness;
   if(policy.liveness){
-    dec.innerHTML='<div class="verdict">Liveness check…</div><div class="sub">Please <b>blink</b> once.</div>';
+    dec.innerHTML='<div class="verdict">Liveness check…</div><div class="sub" style="color:var(--muted)">Please <b>blink</b> once.</div>';
     livePassed=await runBlink();
     if(!livePassed){approved=false;reasons.push("liveness required but not confirmed");}
     else reasons.push("liveness confirmed (blink)");
   }
-
-  // 2) 1:1 biometric match on the current probe
-  const probe=window._lastDescriptor;
-  let score=0;
+  const probe=lastDescriptor;let score=0;
   if(!probe){approved=false;reasons.push("no live face at capture");}
-  else{
-    score=cosine(template,probe);
+  else{score=cosine(template,probe);
     if(score>=threshold)reasons.push("biometric match "+score.toFixed(3)+" ≥ "+threshold.toFixed(2));
-    else{approved=false;reasons.push("biometric score "+score.toFixed(3)+" < threshold "+threshold.toFixed(2));}
-  }
-
-  // 3) record + render
+    else{approved=false;reasons.push("biometric score "+score.toFixed(3)+" < threshold "+threshold.toFixed(2));}}
   const decision={approved,action:SKINS[skin].actionId,resource:SKINS[skin].resource,risk:r,
     score:+score.toFixed(4),threshold,liveness_required:policy.liveness,liveness_passed:livePassed,
     reasons,ts:new Date().toISOString()};
   await appendAudit(decision);
   renderDecision(decision);
 };
-
-function runBlink(){
-  return new Promise(resolve=>{
-    const ch=makeBlinkChallenge(4000); const t0=performance.now();
-    (function tick(){
-      const e=lastEAR==null?0.35:lastEAR;
-      const r=ch.update(e,performance.now());
-      if(r.done)return resolve(r.passed);
-      if(performance.now()-t0>4500)return resolve(false);
-      requestAnimationFrame(tick);
-    })();
-  });
-}
-
+function runBlink(){return new Promise(resolve=>{const ch=makeBlink(4000),t0=performance.now();
+  (function tick(){const e=lastEAR==null?0.35:lastEAR;const r=ch.update(e,performance.now());
+    if(r.done)return resolve(r.passed);if(performance.now()-t0>4600)return resolve(false);
+    requestAnimationFrame(tick);})();});}
 function renderDecision(d){
-  const dec=$("decision");
-  dec.className="decision "+(d.approved?"ok":"bad");
-  const pct=Math.max(0,Math.min(1,(d.score)))*100;
-  dec.innerHTML=
-    '<div class="verdict">'+(d.approved?"✔ AUTHORISED":"✗ DENIED")+'</div>'+
-    '<div class="sub">'+SKINS[skin].action+' — '+d.resource+'</div>'+
-    '<div class="meter"><i style="width:'+pct.toFixed(0)+'%"></i></div>'+
-    '<div class="sub" style="margin-top:6px">cosine '+d.score.toFixed(3)+' vs threshold '+d.threshold.toFixed(2)+
-      ' • risk '+d.risk+'</div>'+
+  const dec=$("decision");dec.className="decision "+(d.approved?"ok":"bad");
+  const pct=clamp(d.score,0,1)*100;
+  dec.innerHTML='<div class="verdict">'+(d.approved?"✔ AUTHORISED":"✗ DENIED")+'</div>'+
+    '<div class="sub" style="color:var(--muted)">'+SKINS[skin].action+' — '+d.resource+'</div>'+
+    '<div class="meter" style="margin-top:10px"><i style="width:'+pct.toFixed(0)+'%"></i></div>'+
+    '<div class="sub" style="margin-top:6px;color:var(--muted)">cosine '+d.score.toFixed(3)+
+      ' vs threshold '+d.threshold.toFixed(2)+' • risk '+d.risk+'</div>'+
     '<ul>'+d.reasons.map(x=>"<li>"+x+"</li>").join("")+'</ul>';
 }
 
-// ---- hash-chained audit (mirrors cranium/authorization.py) ----------------
-async function appendAudit(decision){
+async function appendAudit(d){
   const prev=audit.length?audit[audit.length-1].hash:"0".repeat(64);
-  const body=JSON.stringify(decision);
-  const hash=await sha256hex(prev+body);
-  audit.push({prev,hash,decision});
-  renderAudit();
+  const hash=await sha256hex(prev+JSON.stringify(d));
+  audit.push({prev,hash,decision:d});
+  $("btnDownload").disabled=false;$("btnResetAudit").disabled=false;
+  await renderAudit();
 }
-async function verifyChain(){
-  let prev="0".repeat(64);
-  for(const rec of audit){
-    if(rec.prev!==prev)return false;
-    if(rec.hash!==await sha256hex(prev+JSON.stringify(rec.decision)))return false;
-    prev=rec.hash;
-  }
-  return true;
-}
+async function verifyChain(){let prev="0".repeat(64);
+  for(const r of audit){if(r.prev!==prev)return false;
+    if(r.hash!==await sha256hex(prev+JSON.stringify(r.decision)))return false;prev=r.hash;}return true;}
 async function renderAudit(){
   const box=$("audit");
-  if(!audit.length){box.innerHTML='<div class="tagline">No authorisation events yet.</div>';return;}
-  box.innerHTML=audit.map((r,i)=>{
-    const d=r.decision;
-    return '<div class="rec"><span class="v '+(d.approved?"ok":"bad")+'">'+
-      (d.approved?"AUTHORISED":"DENIED")+'</span> · '+d.action+' · '+d.resource+
-      ' · cos '+d.score.toFixed(3)+' · risk '+d.risk+
-      '<div class="h">#'+(i+1)+' '+d.ts+'</div><div class="h">hash '+r.hash.slice(0,32)+'…</div></div>';
-  }).reverse().join("");
+  if(!audit.length){box.innerHTML='<div class="tagline">No authorisation events yet.</div>';
+    $("chainState").className="chip";$("chainState").textContent="chain: empty";return;}
+  box.innerHTML=audit.map((r,i)=>{const d=r.decision;
+    return '<div class="rec"><span class="v '+(d.approved?"ok":"bad")+'">'+(d.approved?"AUTHORISED":"DENIED")+
+      '</span> · '+d.action+' · '+d.resource+' · cos '+d.score.toFixed(3)+' · risk '+d.risk+
+      '<div class="h">#'+(i+1)+' '+d.ts+'</div><div class="h">hash '+r.hash.slice(0,40)+'…</div></div>';}).reverse().join("");
   const ok=await verifyChain();
+  $("chainState").className="chip "+(ok?"ok":"bad");
   $("chainState").textContent="chain: "+(ok?"verified ✓ ("+audit.length+")":"BROKEN");
 }
-
-// ---- boot -----------------------------------------------------------------
-$("btnStart").onclick=async()=>{
-  $("btnStart").disabled=true; $("btnStart").textContent="loading…";
-  try{ if(!faceapi.nets.tinyFaceDetector.params) await loadModels(); await startCamera(); }
-  catch(e){ $("btnStart").disabled=false; $("btnStart").textContent="Enable camera";
-    alert("Failed to start: "+e.message); }
+$("btnDownload").onclick=()=>{
+  const blob=new Blob([JSON.stringify(audit,null,2)],{type:"application/json"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download="cranium-audit-log.json";a.click();URL.revokeObjectURL(a.href);
 };
-refreshPolicy();
+$("btnResetAudit").onclick=()=>{audit.length=0;$("btnDownload").disabled=true;$("btnResetAudit").disabled=true;renderAudit();};
+
+refreshPolicy();setStep();
 </script>
 </body>
 </html>
