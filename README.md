@@ -4,6 +4,25 @@ Upper-face (periocular) verification and an authorisation engine that keeps
 working when the lower face is covered — surgical masks, respirators, helmets,
 veils. This is the Phase 1 prototype from the concept brief.
 
+## Why CRANIUM — the origin
+
+CRANIUM carries my father's name and his idea. **GAFAR** is his first name.
+Since he was a child he was told that a future technological advance would
+centre on the **forehead** — he was never sure whether it meant the skin, the
+skull, or the whole structure of that region. **CRANIUM** is that region: the
+house of components he was pointing at. This project takes the idea literally —
+identity verification that works from the upper face, forehead and eyes — and
+carries his name.
+
+## What this is
+
+A solo student portfolio and learning project (I'm at CU London, Dagenham),
+built to push the idea as far as it will go. The goal is general **role-based
+access control and authentication** — confirming the right person before a
+sensitive action — with **finance** as the lead example and any high-stakes or
+covered-face context fair game. It doubles as a way to learn new libraries and
+techniques, and it could grow into something real. We'll see how it goes.
+
 **The thesis, in one picture** (`docs/periocular_proof.png`): the yellow box is
 the region CRANIUM matches on — eyes, brows, nose bridge, forehead. Everything
 below it (nose, mouth, jaw) can be covered without touching the matched region.

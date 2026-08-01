@@ -1,14 +1,15 @@
 # Biometric Data Consent Form — CRANIUM research pilot
 
-> **Template, not legal advice.** This is a plain-English starting point for a
-> research pilot. Biometric data is *special category* / *sensitive* personal data
-> under the UK/EU GDPR and is separately regulated in the US (e.g. Illinois BIPA,
-> Texas CUBI, Washington MHMD). Have the final wording reviewed by a qualified
-> data-protection professional, and complete a Data Protection Impact Assessment
-> (DPIA) **before** you collect anything. Fill every **[bracketed]** field.
+> **Template, not legal advice.** A plain-English starting point for a small UK
+> student research pilot. Biometric data is **special category** personal data
+> under the **UK GDPR**, so the bar is high: explicit consent, a real DPIA, and
+> minimal retention. Have the final wording checked by someone qualified — your
+> university's data-protection / research-ethics contact at CU London is a
+> sensible first stop — and complete the DPIA **before** you collect anything.
+> Fill every **[bracketed]** field.
 
 **Project:** CRANIUM (Project GAFAR) — upper-face (periocular) verification research
-**Data controller:** [Your name / company], [address], [email]
+**Data controller:** [Your name — student researcher] (check whether you or **CU London** is the data controller for a student project), [email]
 **Contact for data questions:** [name, email]
 **Date:** [ ______________ ]
 
